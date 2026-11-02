@@ -1,0 +1,25 @@
+digraph G { graph [rankdir=TB, bgcolor="white", pad="0.3", nodesep="0.35", ranksep="0.7", dpi=170]; node [shape=plain,fontname="NanumGothic",fontsize=13,style="filled",fillcolor="#f8fafc",color="#475569",margin="0.16,0.10"]; edge [fontname="NanumGothic",fontsize=10,color="#475569"];
+main [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="8"><TR><TD BGCOLOR="#dbeafe"><B>MainFrame</B></TD></TR><TR><TD ALIGN="LEFT">달력 · 목록 · 검색 / 필터</TD></TR><TR><TD ALIGN="LEFT">+refresh() / selectDate(date)</TD></TR></TABLE>>];
+dialog [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="8"><TR><TD BGCOLOR="#dbeafe"><B>ScheduleDialog</B></TD></TR><TR><TD ALIGN="LEFT">일정 입력 · 자동 추천</TD></TR><TR><TD ALIGN="LEFT">별도 저장 / 취소</TD></TR></TABLE>>];
+settingsUI [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="8"><TR><TD BGCOLOR="#dbeafe"><B>SettingsDialog</B></TD></TR><TR><TD ALIGN="LEFT">시간 기준 입력 · 저장</TD></TR></TABLE>>];
+schedule [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="8"><TR><TD BGCOLOR="#dbeafe"><B>ScheduleService</B></TD></TR><TR><TD ALIGN="LEFT">+prepare(input, id): Schedule</TD></TR><TR><TD ALIGN="LEFT">+saveSchedule(input, id): Schedule</TD></TR><TR><TD ALIGN="LEFT">+updateScheduleProgress(id, status, date)</TD></TR><TR><TD ALIGN="LEFT">+deleteSchedule(id) / searchSchedules(...)</TD></TR></TABLE>>];
+planning [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="8"><TR><TD BGCOLOR="#dbeafe"><B>PlanningService</B></TD></TR><TR><TD ALIGN="LEFT">-clock: Clock</TD></TR><TR><TD ALIGN="LEFT">+checkConflicts(candidate, excludedId)</TD></TR><TR><TD ALIGN="LEFT">+recommendDates(candidate, deadline, excludedId)</TD></TR><TR><TD ALIGN="LEFT">+getDailySummary(date) / isOverdue(s)</TD></TR></TABLE>>];
+settings [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="8"><TR><TD BGCOLOR="#dbeafe"><B>SettingsService</B></TD></TR><TR><TD ALIGN="LEFT">+current(): UserSettings</TD></TR><TR><TD ALIGN="LEFT">+updateTimeSettings(limit, fallback)</TD></TR><TR><TD ALIGN="LEFT">반환: List of exceeded dates</TD></TR></TABLE>>];
+state [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="8"><TR><TD BGCOLOR="#dbeafe"><B>StateStore</B></TD></TR><TR><TD ALIGN="LEFT">-data: AppData</TD></TR><TR><TD ALIGN="LEFT">-repository: FileRepository</TD></TR><TR><TD ALIGN="LEFT">+data() / commit(next)</TD></TR></TABLE>>];
+repo [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="8"><TR><TD BGCOLOR="#dbeafe"><B>FileRepository</B></TD></TR><TR><TD ALIGN="LEFT">-path: Path</TD></TR><TR><TD ALIGN="LEFT">+loadData(): AppData</TD></TR><TR><TD ALIGN="LEFT">+saveData(data): void</TD></TR></TABLE>>];
+main -> dialog [label="생성"];
+main -> settingsUI [label="생성"];
+main -> schedule [label="사용"];
+main -> planning [label="사용"];
+main -> settings [label="사용"];
+dialog -> schedule [label="사용"];
+dialog -> planning [label="사용"];
+dialog -> settings [label="현재 설정"];
+settingsUI -> settings [label="사용"];
+schedule -> planning [label="충돌 검사"];
+schedule -> state [label="저장"];
+planning -> state [label="조회"];
+settings -> state [label="설정 저장"];
+state -> repo [label="위임"];
+{rank=same;main;dialog;settingsUI;} {rank=same;schedule;planning;settings;}
+}

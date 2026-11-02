@@ -1,0 +1,7 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    { "type": "java", "name": "Run TimeFit", "request": "launch", "mainClass": "timefit.App" },
+    { "type": "java", "name": "Run Core Tests", "request": "launch", "mainClass": "timefit.CoreTests", "vmArgs": "-ea" }
+  ]
+}

@@ -1,0 +1,66 @@
+classDiagram
+direction TB
+class MainFrame
+class ScheduleDialog
+class SettingsDialog
+class ScheduleService {
+  +prepare(input, id) Schedule
+  +saveSchedule(input, id) Schedule
+  +deleteSchedule(id) void
+  +updateScheduleProgress(id, status, date) Schedule
+  +searchSchedules(query, filters) List
+}
+class PlanningService {
+  +checkConflicts(candidate, excludedId) ConflictResult
+  +recommendDates(candidate, deadline, excludedId) List
+  +getDailySummary(date) long
+  +getMonthScheduleCounts(month) Map
+  +isOverdue(schedule) boolean
+}
+class SettingsService {
+  +current() UserSettings
+  +updateTimeSettings(limit, default) List
+}
+class StateStore {
+  -data AppData
+  +commit(next) void
+}
+class FileRepository {
+  -path Path
+  +loadData() AppData
+  +saveData(data) void
+}
+class AppData {
+  +settings UserSettings
+  +schedules List
+  +nextId long
+}
+class Schedule {
+  +id long
+  +title String
+  +date LocalDate
+  +kind Kind
+  +durationMinutes int
+  +start LocalTime
+  +end LocalTime
+  +effectiveMinutes(settings) int
+}
+class UserSettings {
+  +dailyLimitMinutes int
+  +defaultDurationMinutes int
+}
+MainFrame --> ScheduleDialog
+MainFrame --> SettingsDialog
+MainFrame --> ScheduleService
+MainFrame --> PlanningService
+ScheduleDialog --> ScheduleService
+ScheduleDialog --> PlanningService
+SettingsDialog --> SettingsService
+ScheduleService --> PlanningService
+ScheduleService --> StateStore
+PlanningService --> StateStore
+SettingsService --> StateStore
+StateStore --> FileRepository
+StateStore o-- AppData
+AppData *-- "1" UserSettings
+AppData *-- "0..*" Schedule

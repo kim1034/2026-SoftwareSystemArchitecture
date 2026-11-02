@@ -1,0 +1,18 @@
+digraph G { graph [rankdir=TB, bgcolor="white", pad="0.3", nodesep="0.35", ranksep="0.7", dpi=170]; node [shape=plain,fontname="NanumGothic",fontsize=13,style="filled",fillcolor="#f8fafc",color="#475569",margin="0.16,0.10"]; edge [fontname="NanumGothic",fontsize=10,color="#475569"];
+app [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="8"><TR><TD BGCOLOR="#dbeafe"><B>AppData «record»</B></TD></TR><TR><TD ALIGN="LEFT">settings: UserSettings</TD></TR><TR><TD ALIGN="LEFT">schedules: List of Schedule</TD></TR><TR><TD ALIGN="LEFT">nextId: long</TD></TR></TABLE>>];
+settings [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="8"><TR><TD BGCOLOR="#dbeafe"><B>UserSettings «record»</B></TD></TR><TR><TD ALIGN="LEFT">dailyLimitMinutes: int</TD></TR><TR><TD ALIGN="LEFT">defaultDurationMinutes: int</TD></TR><TR><TD ALIGN="LEFT">+defaults()</TD></TR></TABLE>>];
+schedule [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="8"><TR><TD BGCOLOR="#dbeafe"><B>Schedule «record»</B></TD></TR><TR><TD ALIGN="LEFT">id: long / title: String / date: LocalDate</TD></TR><TR><TD ALIGN="LEFT">category: String / importance: Importance</TD></TR><TR><TD ALIGN="LEFT">status: Status / kind: Kind</TD></TR><TR><TD ALIGN="LEFT">durationMinutes: int</TD></TR><TR><TD ALIGN="LEFT">start, end: LocalTime (optional)</TD></TR><TR><TD ALIGN="LEFT">+effectiveMinutes(settings): int</TD></TR></TABLE>>];
+input [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="8"><TR><TD BGCOLOR="#dbeafe"><B>ScheduleInput «record»</B></TD></TR><TR><TD ALIGN="LEFT">title / date / category / importance</TD></TR><TR><TD ALIGN="LEFT">status / kind / estimatedMinutes (optional)</TD></TR><TR><TD ALIGN="LEFT">start / end (optional)</TD></TR></TABLE>>];
+conflict [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="8"><TR><TD BGCOLOR="#dbeafe"><B>ConflictResult «record»</B></TD></TR><TR><TD ALIGN="LEFT">totalMinutes, remainingMinutes: long</TD></TR><TR><TD ALIGN="LEFT">overlappingIds: List of Long</TD></TR><TR><TD ALIGN="LEFT">reasons: List of String</TD></TR><TR><TD ALIGN="LEFT">+allowed(): boolean</TD></TR></TABLE>>];
+rec [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="8"><TR><TD BGCOLOR="#dbeafe"><B>Recommendation «record»</B></TD></TR><TR><TD ALIGN="LEFT">date: LocalDate</TD></TR><TR><TD ALIGN="LEFT">totalMinutes, remainingMinutes: long</TD></TR><TR><TD ALIGN="LEFT">reason: String</TD></TR></TABLE>>];
+kind [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="8"><TR><TD BGCOLOR="#dbeafe"><B>Kind «enum»</B></TD></TR><TR><TD ALIGN="LEFT">NORMAL / ALL_DAY</TD></TR></TABLE>>];
+status [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="8"><TR><TD BGCOLOR="#dbeafe"><B>Status «enum»</B></TD></TR><TR><TD ALIGN="LEFT">PLANNED / IN_PROGRESS / COMPLETED</TD></TR></TABLE>>];
+importance [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="8"><TR><TD BGCOLOR="#dbeafe"><B>Importance «enum»</B></TD></TR><TR><TD ALIGN="LEFT">LOW / NORMAL / HIGH</TD></TR></TABLE>>];
+app -> settings [label="구성: 1",dir=both,arrowtail=diamond,arrowhead=none];
+app -> schedule [label="구성: 0..*",dir=both,arrowtail=diamond,arrowhead=none];
+input -> schedule [label="prepare 변환 (의존)"];
+schedule -> kind [label="시간 구분"];
+schedule -> status [label="진행 상태"];
+schedule -> importance [label="중요도"];
+{rank=same;settings;schedule;} {rank=same;kind;status;importance;} {rank=same;input;conflict;rec;}
+}

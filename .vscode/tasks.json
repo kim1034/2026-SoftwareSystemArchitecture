@@ -1,0 +1,8 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    { "label": "TimeFit Build", "type": "shell", "command": "bash scripts/build.sh", "windows": { "command": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/build.ps1" }, "group": { "kind": "build", "isDefault": true }, "problemMatcher": "$javac" },
+    { "label": "TimeFit Test", "type": "shell", "command": "bash scripts/test.sh", "windows": { "command": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/test.ps1" }, "problemMatcher": "$javac" },
+    { "label": "TimeFit Javadoc", "type": "shell", "command": "bash scripts/javadoc.sh", "windows": { "command": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/javadoc.ps1" }, "problemMatcher": [] }
+  ]
+}

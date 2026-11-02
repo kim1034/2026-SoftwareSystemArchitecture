@@ -1,0 +1,8 @@
+build/
+dist/
+api-manual/
+*.class
+*.log
+*.lock
+data.xml
+.DS_Store
